@@ -85,12 +85,12 @@ app.use('/api/carts', cartsRoutes)
 app.use('/handlebars', homeHandlebars);
 app.use('/mockingproducts', mockingproducts)
 app.use('/loggerTest', (request, response) => {
-    request.logger.debug('This is a debug log message');
-    request.logger.http('This is an http log message');
-    request.logger.info('This is an info log message');
-    request.logger.warning('This is a warn log message');
-    request.logger.error('This is an error log message');
-    request.logger.fatal('This is a fatal log message');
+    request.logger.debug('Este es un mensaje de logger de depuración');
+	request.logger.http('Este es un mensaje de logger HTTP');
+	request.logger.info('Este es un mensaje de logger de información');
+	request.logger.warning('Este es un mensaje de logger de advertencia');
+	request.logger.error('Este es un mensaje de logger de error');
+	request.logger.fatal('Este es un mensaje de logger fatal');
 
     response.send('Loggers generados. Si estas en ambiente de desarrollo, revisa la consola, de lo contrario, revisa el archivo errors.log :)');
 });

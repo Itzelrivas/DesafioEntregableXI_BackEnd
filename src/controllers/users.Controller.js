@@ -8,10 +8,12 @@ export const getCartUserController = async (request, response) => {
         if (!user) {
             return response.status(404).send(`El usuario con correo ${user_email} no se ha encontrado.`);
         }
-        console.log("Se pudo acceder con exito al usuario.")
+        //console.log("Se pudo acceder con exito al usuario.")
+        request.logger.info("Se pudo acceder con exito al usuario.")
         response.send(user)
     } catch (error) {
-        console.error("Ha surgido este error: " + error);
+        //console.error("Ha surgido este error: " + error);
+        request.logger.error(`Ha surgido este error: ${error}`)
         response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error y no se pueden mostrar el usuario.</h2>');
     }
 }
@@ -33,7 +35,8 @@ export const loginUserController = async (request, response) => {
 //Obtenemos la info del usuario
 export const getInfoUser = async (request, response) => {
     const user = request.session.user
-    console.log(request.session)
+    //console.log(request.session)
+    request.logger.info(`Session: ${JSON.stringify(request.session, null, 2)}`)
     response.render('current', { user })
 }
 

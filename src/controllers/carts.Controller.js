@@ -16,11 +16,13 @@ export const getCartsController = async (request, response) => {
                 message: 'Error tratando de obtener los carts de la base de datos.',
                 code: NErrors.DATABASE_ERROR
             })
+            request.logger.warning('No hay carritos disponibles.');
             return response.status(404).send(`No hay carritos disponibles.`);
         }
         return response.send(carts);;
     } catch (error) {
-        console.error("Ha surgido este error: " + error);
+        //console.error("Ha surgido este error: " + error);
+        request.logger.error(`Ha surgido este error: ${error}`)
         return response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error, por lo tanto, no se pueden mostrar los carritos con population.</h2>');
     }
 }
@@ -34,7 +36,8 @@ export const createCartsController = async (request, response) => {
         await createCartService(cart)
         return response.send(`Se ha creado un nuevo carrito con id=${cart.id}`)
     } catch (error) {
-        console.error("Ha surgido este error: " + error)
+        //console.error("Ha surgido este error: " + error)
+        request.logger.error(`Ha surgido este error: ${error}`)
         response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error, por lo tanto, no se pudo crear un carrito.</h2>')
     }
 }
@@ -56,6 +59,7 @@ export const getCarPopController = async (request, response) => {
     
         const searchCart = await getCartPopService(cartId)
         if (!searchCart) {
+            request.logger.warning('No se encontró el carrito solicitado');
             return response.status(404).send(`El carrito con id=${cartId} no fue encontrado`)
         }
 
@@ -63,7 +67,8 @@ export const getCarPopController = async (request, response) => {
         return response.send(searchCart)
     
     } catch (error) {
-        console.error(error)
+        //console.error(error)
+        request.logger.error(`Ha surgido este error: ${error}`)
         return response.status(500).send(`Ocurrió un error al buscar el carrito.`)
     }
 }
@@ -114,7 +119,8 @@ export const addProductToCartController = async (request, response) => {
     
         return response.send(`Se ha agregado el producto con el id=${productId} al carrito con id=${cartId}`);
     } catch (error) {
-        console.error(error)
+        //console.error(error)
+        request.logger.error(`Ha surgido este error: ${error}`)
         return response.status(500).send(`Ocurrió un error al agregar un producto al carrito.`)
     }
 }
@@ -126,7 +132,8 @@ export const addProductToCartBy_IdController = async (request, response) => {
             return response.send(`Para poder agregar productos a tu carrito, tienes que iniciar sesión primero :)`);
         }
         const cartId = request.session.user.cart
-        console.log(cartId)
+        //console.log(cartId)
+        request.logger.debug(cartId)
         let product_Id = request.params.p_id
 
         //Tenemos queu hacer un service que busque un cart mediante su _id
@@ -157,7 +164,8 @@ export const addProductToCartBy_IdController = async (request, response) => {
 
         return response.send(`Producto agregado`);
     } catch (error) {
-        console.error("Ha surgido este error: " + error);
+        //console.error("Ha surgido este error: " + error);
+        request.logger.error(`Ha surgido este error: ${error}`)
         response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error, por lo tanto, no se pudo agregar un producto al carrito.</h2>');
     }
 }
@@ -197,7 +205,8 @@ export const deleteProductToCartController = async (request, response) => {
         return response.send({ msg: `El carrito con el id=${cartId} no existe.` })
         
     } catch (error) {
-        console.error(error)
+        //console.error(error)
+        request.logger.error(`Ha surgido este error: ${error}`)
         return response.status(500).send(`Ocurrió un error al eliminar un producto al carrito.`)
     }
 }
@@ -227,7 +236,8 @@ export const deleteProductsCartController = async (request, response) => {
         return response.send(`Se han eliminado los productos del carrito con id=${cartId}`);
         
     } catch (error) {
-        console.error(error)
+        //console.error(error)
+        request.logger.error(`Ha surgido este error: ${error}`)
         return response.status(500).send(`Ocurrió un error al eliminar los productos del carrito.`)
     }
 }
@@ -265,7 +275,8 @@ export const updateCantProductsController = async (request, response) => {
 
             // Verificar si el producto ya está en el carrito
             const existingProductIndex = cart.products.findIndex(item => item.product.id === product.id);
-            console.log(existingProductIndex)
+            //console.log(existingProductIndex)
+            request.logger.debug(existingProductIndex)
             if (existingProductIndex !== -1) {
                 await updateCantProductsService(cartId, productId, newQuantity)
                 return response.send(`Se ha actualizado la cantidad de ejemplares del producto con el id=${productId} en el carrito con id=${cartId}`);
@@ -277,7 +288,8 @@ export const updateCantProductsController = async (request, response) => {
             return response.send(`El carrito con el id=${cartId} esta vacío.`);
         }
     } catch (error) {
-        console.error(error)
+        //console.error(error)
+        request.logger.error(`Ha surgido este error: ${error}`)
         return response.status(500).send(`<h2>¡Oh oh! Ha surgido un error, por lo tanto, no se pudo modificar la cantidad del producto en el carrito.</h2>`);
     }
 }
@@ -298,7 +310,8 @@ export const updateProductsCartController = async (request, response) => {
         await updateProductsCartService(cartId, newProducts)
         return response.send(`Se ha actualizado los productos del carrito con id=${cartId}`);
     } catch (error) {
-        console.error("Ha surgido este error: " + error);
+        //console.error("Ha surgido este error: " + error);
+        request.logger.error(`Ha surgido este error: ${error}`)
         response.status(500).send(`<h2 style="color: red">¡Oh oh! Ha surgido un error, por lo tanto, no se pudo modificar los productos del carrito con id=${cartId}.</h2>`);
     }
 }
@@ -328,7 +341,8 @@ export const getProductsCart = async (request, response) => {
             return response.send(`El carrito con id=${cartId} no existe :(`)
         }
     } catch (error) {
-        console.error("Ha surgido este error: " + error);
+        //console.error("Ha surgido este error: " + error);
+        request.logger.error(`Ha surgido este error: ${error}`)
         response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error y no se pueden mostrar los productos.</h2>');
     }
 }
@@ -338,7 +352,8 @@ export const purchaseCartController = async (request, response) => {
     try {
         let cartId = parseInt(request.params.cid)
         let email = await emailByCartId(cartId)
-        console.log(email)
+        //console.log(email)
+        request.logger.debug(email)
         if(!email){
             return response.send(`El carrito con id = ${cartId} no esta asociado a ningún usuario.`);
         }
@@ -349,7 +364,8 @@ export const purchaseCartController = async (request, response) => {
             return response.send(`Se ha finalizado la compra del carrito con id=${cartId} :). Los productos que no se pudieron procesar son ${leftProducts}`)
         }
     } catch (error) {
-        console.error("Ha surgido este error: " + error);
+        //console.error("Ha surgido este error: " + error);
+        request.logger.error(`Ha surgido este error: ${error}`)
         response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error y no se pueden mostrar los productos.</h2>');
     }
 }

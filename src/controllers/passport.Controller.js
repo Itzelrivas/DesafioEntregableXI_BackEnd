@@ -8,7 +8,6 @@ import { verifyEmailService } from '../services/users.Service.js';
 
 initializePassport()
 
-
 //Registro de usuario con passport
 export const registerUser = (req, res, next) => {
     const { first_name, last_name, email, age, password } = req.body;
@@ -26,20 +25,18 @@ export const registerUser = (req, res, next) => {
         failureRedirect: '/api/sessions/fail-register' 
     })(req, res, next); 
 
-    console.log("abc")
     let verifyEmail = verifyEmailService(email)
-    console.log("abc")
     console.log(verifyEmail)
+    //request.logger.debug(verifyEmail)
     if(verifyEmail === null){
-        console.log("Error al registrar nuevo usuario.");
+        request.logger.error("Error al registrar nuevo usuario.");
         res.status(200).send({ status: 'noSuccess', message: "Usuario no creado porque el correo ya ha sido utilizado anteriormente :(" });
     }
     
     console.log("Registrando nuevo usuario.");
+    //request.logger.info("Registrando nuevo usuario.")
     res.status(200).send({ status: 'success', message: "Usuario creado de forma exitosa!!" });
 };
-
-
 
 //Login del usuario con passport
 export const loginUser = (request, response, next) => { 

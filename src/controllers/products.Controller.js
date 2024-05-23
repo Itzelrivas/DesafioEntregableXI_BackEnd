@@ -25,7 +25,8 @@ export const getProductsController = async (request, response) => {
 			response.send(products)
 		}
 	} catch (error) {
-		console.error("Error al intentar acceder a los productos: " + error);
+		//console.error("Error al intentar acceder a los productos: " + error);
+        request.logger.error(`Ha surgido este error: ${error}`)
 		return response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error.</h2>')
 	}
 }
@@ -51,7 +52,8 @@ export const getProductIdController = async (request, response) => {
 		}
 		return response.send({ msg: `El producto con el id=${productId} no existe.` })
 	} catch (error) {
-		console.error(error)
+		//console.error(error)
+        request.logger.error(`Ha surgido este error: ${error}`)
 		return response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error, por lo tanto, no se pudo mostrar lo solicitado.</h2>')
 	}
 }
@@ -66,7 +68,8 @@ export const getProduct_IdController = async (request, response) => {
         }
         return response.send({ msg: `El producto con el _id=${product_id} no existe.` })
     } catch (error) {
-        console.error("Ha surgido este error: " + error)
+        //console.error("Ha surgido este error: " + error)
+        request.logger.error(`Ha surgido este error: ${error}`)
 		response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error, por lo tanto, no se pudo mostrar lo solicitado.</h2>')
 	}
 }
@@ -85,7 +88,8 @@ export const getProductsLimitPaginated = async (request, response) => {
         if (!request.query.hasOwnProperty('limit')) {
             // Si limit no está presente en la consulta, utilizar la paginación
             let result = await getProductsPaginatedS(page);
-			console.log(result)
+			//console.log(result)
+            request.logger.debug(result)
             // Actualizar los enlaces de paginación
             result.prevLink = result.hasPrevPage ? `http://localhost:9090/handlebars/home?page=${result.prevPage}` : '';
             result.nextLink = result.hasNextPage ? `http://localhost:9090/handlebars/home?page=${result.nextPage}` : '';
@@ -125,7 +129,8 @@ export const getProductsLimitPaginated = async (request, response) => {
         }
 
     } catch (error) {
-        console.error("Ha surgido este error: " + error);
+        //console.error("Ha surgido este error: " + error);
+        request.logger.error(`Ha surgido este error: ${error}`)
         response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error al obtener los productos.</h2>');
     }
 }
@@ -161,7 +166,8 @@ export const getProductsSortController = async (request, response) => {
             result
         });
     } catch (error) {
-        console.error("Ha surgido este error: " + error);
+        //console.error("Ha surgido este error: " + error);
+        request.logger.error(`Ha surgido este error: ${error}`)
         response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error al ordenar los productos.</h2>');
     }
 }
@@ -199,7 +205,8 @@ export const getProductsCategoryCont = async (request, response) => {
             result
         });
     } catch (error) {
-        console.error("Ha surgido este error: " + error);
+        //console.error("Ha surgido este error: " + error);
+        request.logger.error(`Ha surgido este error: ${error}`)
         response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error al ordenar los productos.</h2>');
     }
 }
@@ -216,7 +223,8 @@ export const getProductsRTController = async (request, response) => {
             products
         });
     } catch (error) {
-        console.error("Ha surgido este error: " + error);
+        //console.error("Ha surgido este error: " + error);
+        request.logger.error(`Ha surgido este error: ${error}`)
         response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error al obtener los productos.</h2>');
     }
 }
@@ -254,7 +262,8 @@ export const getProductsPaginatedButton = async (request, response) => {
         });
 
     } catch (error) {
-        console.error("Ha surgido este error: " + error);
+        //console.error("Ha surgido este error: " + error);
+        request.logger.error(`Ha surgido este error: ${error}`)
         response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error al mostrar los productos.</h2>');
     }
 }
@@ -309,7 +318,8 @@ export const newProductController = async (request, response) => {
 
         return response.send({ status: "Success", msg: `Se ha creado un nuevo producto exitosamente con id=${idNewProduct} :)` });
 	} catch (error) {
-		console.error(error);
+		//console.error(error);
+        request.logger.error(`Ha surgido este error: ${error}`)
 		return response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error, por lo tanto, no se pudo crear un nuevo producto.</h2>');
 	}
 }
@@ -338,7 +348,8 @@ export const updateProductController = async (request, response) => {
 
 		return response.send({ status: "Success", message: "Se ha actualizado el producto con éxito :)", data: products[productPosition] })
 	} catch (error) {
-		console.error("Ha surgido este error: " + error)
+		//console.error("Ha surgido este error: " + error)
+        request.logger.error(`Ha surgido este error: ${error}`)
 		response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error, por lo tanto, no se pudo actualizar el producto.</h2>')
 	}
 }
@@ -383,7 +394,8 @@ export const deleteProductController = async (request, response) => {
 
 		response.send({ status: "Success", message: `El producto con id=${productId} ha sido eliminado.` });
 	} catch (error) {
-		console.error("Ha surgido este error: " + error)
+		//console.error("Ha surgido este error: " + error)
+        request.logger.error(`Ha surgido este error: ${error}`)
 		response.status(500).send('<h2 style="color: red">¡Oh oh! Ha surgido un error, por lo tanto, no se pudo eliminar el producto.</h2>')
 	}
 }

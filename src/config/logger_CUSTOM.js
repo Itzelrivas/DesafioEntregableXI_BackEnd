@@ -16,6 +16,7 @@ const customLevelsOptions = {
         error: 'yellow',
         warning: 'magenta',
         info: 'green',
+        http: 'blue',
         debug: 'cyan'
     }
 }
@@ -28,7 +29,7 @@ const devLogger = winston.createLogger({
     levels: customLevelsOptions.levels,
     transports: [
         new winston.transports.Console({
-            level: "debug",
+            level: 'fatal',
             format: winston.format.combine(
                 winston.format.colorize({ colors: customLevelsOptions.colors }), 
                 winston.format.simple()
@@ -37,15 +38,35 @@ const devLogger = winston.createLogger({
     ]
 })
 
-//Logger de producción
+//Filtramos los levels para production
+const filterOnlySelectedLevels = winston.format((info) => {
+    if (['info', 'warning', 'error', 'fatal'].includes(info.level)) {
+        return info;
+    }
+    return false; // Excluimos los otros niveles
+});
+
+//logger de producción
 const prodLogger = winston.createLogger({
+    //Configuramos los levels 
+    levels: customLevelsOptions.levels,
+    format: winston.format.combine(
+        filterOnlySelectedLevels(), // Aplicamos el filtro
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.File({ filename: './errors.log', level: 'fatal' })
+    ]
+});
+
+/*const prodLogger = winston.createLogger({
     //Configuramos los levels 
     levels: customLevelsOptions.levels,
     // Declaramos transport
     transports: [
-        new winston.transports.File({ filename: './errors.log', level: "info" })
+        new winston.transports.File({ filename: './errors.log', level: "fatal" })
     ]
-})
+})*/
 
 
 export const addLogger = (request, response, next) => {
